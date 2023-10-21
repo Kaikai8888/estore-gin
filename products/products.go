@@ -111,13 +111,19 @@ func (p *ProductRepository) Delete(id int) error {
 	json.NewDecoder(file).Decode(&data)
 
 	var targetIndex int
+	found := false
 	for i, v := range data {
 		_id, _ := strconv.Atoi(v.ID)
 		if id == _id {
 			id = _id + 1
 			targetIndex = i
+			found = true
 			break
 		}
+	}
+
+	if !found {
+		return nil
 	}
 
 	data = slices.Delete(data, targetIndex, targetIndex+1)
