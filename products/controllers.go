@@ -24,7 +24,7 @@ func PostProduct(c *gin.Context) {
 	var newProduct Product
 	var err error
 
-	// bind the received JSON to newAlbum
+	// parsed the request body as JSON, decodes the json payload into the struct specified as a pointer
 	if err := c.BindJSON(&newProduct); err != nil {
 		// TODO: http error response
 		fmt.Printf("error: %v\n", err)

@@ -16,10 +16,11 @@ func ReadJSON(filename string, v any) error { //TODO: 是否可改成pointer to 
 		return err
 	}
 
+	// shared lock (read lock) - other transactions can read but cannot write
 	if err = unix.Flock(int(file.Fd()), unix.LOCK_SH); err != nil {
 		return err
 	}
-	defer unix.Flock(int(file.Fd()), unix.LOCK_UN)
+	defer unix.Flock(int(file.Fd()), unix.LOCK_UN) // release a lock
 
 	json.NewDecoder(file).Decode(v)
 
