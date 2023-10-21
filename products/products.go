@@ -19,7 +19,7 @@ type Product struct {
 
 type ProductRepository struct{}
 
-func (p *ProductRepository) FindById(id string) (Product, error) {
+func (p *ProductRepository) FindById(id int) (Product, error) {
 	var products []Product
 	var result Product
 	err := commons.ReadJSON(dataPath, &products)
@@ -28,13 +28,16 @@ func (p *ProductRepository) FindById(id string) (Product, error) {
 	}
 
 	// TODO: write array methods into commons package for reuse
-
+	idStr := strconv.Itoa(id)
 	for i := 0; i < len(products); i++ {
-		if products[i].ID == id {
+		if products[i].ID == idStr {
 			return products[i], nil
 		}
 	}
-	return result, nil
+
+	var notFoundError commons.GeneralError
+	notFoundError.Message = "data not found"
+	return result, notFoundError
 }
 
 // query Product

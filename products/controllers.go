@@ -20,6 +20,19 @@ func GetProducts(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, products)
 }
 
+func GetProduct(c *gin.Context) {
+	var productRepository ProductRepository
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return
+	}
+	product, err := productRepository.FindById(id)
+	if err != nil {
+		return
+	}
+	c.JSON(http.StatusOK, product)
+}
+
 func PostProduct(c *gin.Context) {
 	var productRepository ProductRepository
 	var newProduct Product
