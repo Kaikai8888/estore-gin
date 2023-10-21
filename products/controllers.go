@@ -3,6 +3,7 @@ package products
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	gin "github.com/gin-gonic/gin"
 )
@@ -43,4 +44,24 @@ func PostProduct(c *gin.Context) {
 	}
 	fmt.Printf("error: %v", newProduct)
 	c.IndentedJSON(http.StatusOK, newProduct)
+}
+
+func DeleteProduct(c *gin.Context) {
+	var productRepository ProductRepository
+	idStr := c.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+
+	if err := productRepository.Delete(id); err != nil {
+		fmt.Printf("error: %v\n", err)
+		return
+	}
+
+	response := map[string]string{"message": "success"}
+	c.JSON(http.StatusOK, response)
+
 }

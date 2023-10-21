@@ -5,6 +5,8 @@ import (
 	"estore-gin/commons"
 	"os"
 	"strconv"
+
+	"golang.org/x/exp/slices"
 )
 
 const dataPath = "products/products.json"
@@ -87,4 +89,44 @@ func (p *ProductRepository) Create(product Product) (Product, error) {
 	}
 
 	return product, nil
+}
+
+func (p *ProductRepository) Delete(id int) error {
+	file, err := os.OpenFile(dataPath, os.O_RDWR|os.O_CREATE, os.ModeExclusive)
+	defer file.Close()
+
+	if err != nil {
+		return err
+	}
+
+	// if err = unix.Flock(int(file.Fd()), unix.LOCK_EX); err != nil {
+	// 	return result, err
+	// }
+	// defer unix.Flock(int(file.Fd()), unix.LOCK_UN)
+
+	var data []Product
+	json.NewDecoder(file).Decode(&data)
+
+	var targetIndex int
+	for i, v := range data {
+		_id, _ := strconv.Atoi(v.ID)
+		if id == _id {
+			id = _id + 1
+			targetIndex = i
+			break
+		}
+	}
+
+	data = slices.Delete(data, targetIndex, targetIndex+1)
+
+	buffer, convertErr := json.MarshalIndent(data, "", "  ")
+	if convertErr != nil {
+		return convertErr
+	}
+
+	if _, err = file.WriteAt(buffer, 0); err != nil {
+		return err
+	}
+
+	return nil
 }
