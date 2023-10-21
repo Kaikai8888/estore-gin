@@ -70,7 +70,7 @@ func (p *ProductRepository) Create(product Product) (Product, error) {
 		if err != nil {
 			return result, err
 		}
-		if id < _id {
+		if id <= _id {
 			id = _id + 1
 		}
 	}
