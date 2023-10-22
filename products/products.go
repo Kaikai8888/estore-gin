@@ -2,6 +2,7 @@ package products
 
 import (
 	"encoding/json"
+	"errors"
 	"estore-gin/commons"
 	"os"
 	"strconv"
@@ -127,7 +128,7 @@ func (p *ProductRepository) Delete(id string) error {
 	}
 
 	if !found {
-		return nil
+		return errors.New("data not found")
 	}
 
 	data = slices.Delete(data, targetIndex, targetIndex+1)

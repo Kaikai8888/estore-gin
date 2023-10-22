@@ -1,6 +1,7 @@
 package products
 
 import (
+	"estore-gin/commons"
 	"fmt"
 	"net/http"
 
@@ -11,9 +12,7 @@ func GetProducts(c *gin.Context) {
 	var productRepository ProductRepository
 	products, err := productRepository.Find()
 	if err != nil {
-		// TODO: http error response
-		fmt.Printf("error: %v\n", err)
-		fmt.Println(err)
+		commons.HandleError(c, err)
 		return
 	}
 	c.IndentedJSON(http.StatusOK, products)
@@ -23,6 +22,7 @@ func GetProduct(c *gin.Context) {
 	var productRepository ProductRepository
 	product, err := productRepository.FindById(c.Param("id"))
 	if err != nil {
+		commons.HandleError(c, err)
 		return
 	}
 	c.JSON(http.StatusOK, product)
@@ -35,19 +35,13 @@ func PostProduct(c *gin.Context) {
 
 	// parsed the request body as JSON, decodes the json payload into the struct specified as a pointer
 	if err := c.BindJSON(&newProduct); err != nil {
-		// TODO: http error response
-		fmt.Printf("error: %v\n", err)
-		fmt.Println(err)
-
+		commons.HandleError(c, err)
 		return
 	}
 
 	newProduct, err = productRepository.Create(newProduct)
 	if err != nil {
-		// TODO: http error response
-		fmt.Printf("error: %v\n", err)
-		fmt.Println(err)
-
+		commons.HandleError(c, err)
 		return
 	}
 	fmt.Printf("error: %v", newProduct)
@@ -58,7 +52,7 @@ func DeleteProduct(c *gin.Context) {
 	var productRepository ProductRepository
 
 	if err := productRepository.Delete(c.Param("id")); err != nil {
-		fmt.Printf("error: %v\n", err)
+		commons.HandleError(c, err)
 		return
 	}
 
