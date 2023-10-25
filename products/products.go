@@ -35,9 +35,10 @@ func (p *ProductRepository) FindById(id string) (Product, error) {
 		}
 	}
 
-	var notFoundError commons.GeneralError
-	notFoundError.Message = "data not found"
-	return result, notFoundError
+	return result, commons.GeneralError{
+		Message:    "data not found",
+		StatusCode: 404,
+	}
 }
 
 // query Product

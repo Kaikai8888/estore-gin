@@ -1,6 +1,7 @@
 package main
 
 import (
+	"estore-gin/commons"
 	"estore-gin/products"
 
 	gin "github.com/gin-gonic/gin"
@@ -8,6 +9,7 @@ import (
 
 func main() {
 	router := gin.Default() // returns a pointer to an Engine instance with embeded RouterGroup
+	router.Use(commons.ErrorHandler)
 
 	productRoute := router.Group("/products")
 	{

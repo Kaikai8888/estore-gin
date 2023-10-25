@@ -2,11 +2,8 @@ package commons
 
 import (
 	"encoding/json"
-	"fmt"
-	"net/http"
 	"os"
 
-	gin "github.com/gin-gonic/gin"
 	"golang.org/x/sys/unix"
 )
 
@@ -28,10 +25,4 @@ func ReadJSON(filename string, v any) error { //TODO: 是否可改成pointer to 
 	json.NewDecoder(file).Decode(v)
 
 	return nil
-}
-
-func HandleError(c *gin.Context, err error) {
-	fmt.Printf("error: %v\n", err)
-	c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
-	return
 }
